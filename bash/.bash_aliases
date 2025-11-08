@@ -81,10 +81,11 @@ if type colordiff > /dev/null 2>&1; then
     alias diff='colordiff'
 fi
 
+# fzf settings
+export FZF_DEFAULT_OPTS='--reverse --border'
+
 # fzf integration
 if type fzf > /dev/null 2>&1; then
-    export FZF_DEFAULT_OPTS='--reverse --border'
-
     eval "$(fzf --bash)"
 fi
 
