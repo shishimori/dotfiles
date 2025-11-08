@@ -7,9 +7,7 @@ LINK_FILES=(
 for f in "${LINK_FILES[@]}"
 do
     FROM_PATH=$(readlink -f $f)
-
-    FILE_NAME="$HOME/$(basename $FROM_PATH)"
-    LINK_PATH=$(readlink -f $FILE_NAME)
+    LINK_PATH="$HOME/$(basename $FROM_PATH)"
 
     if [ ! -e $LINK_PATH ]; then
         ln -snfv $FROM_PATH $LINK_PATH
