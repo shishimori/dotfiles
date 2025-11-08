@@ -24,7 +24,7 @@ PATH=/usr/local/go/bin:$GOPATH/bin:$PATH
 
 if [ $(uname) = "Darwin" ]; then
     alias ls='ls -GF' # colorized output, display slash
-elif [ $(uname) = "Linux" ]; then
+else
     alias ls='ls -F --color' # colorized output, display slash
 fi
 alias ll='ls -alF'
@@ -37,24 +37,38 @@ alias relogin="exec $SHELL"
 alias gtop='cd `git rev-parse --show-toplevel`'
 alias clip='xsel --input --clipboard'
 
-# base PS1
-PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]'
-# PS1='[$(date '+%H:%M:%S')] '$PS1
+# git-prompt settings
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWSTASHSTATE=1
+GIT_PS1_SHOWUNTRACKEDFILES=1
+GIT_PS1_SHOWCOLORHINTS=1
 
-# Git PS1
-if [[ -e /etc/bash_completion.d/git-prompt ]]; then
-    source /etc/bash_completion.d/git-prompt 
-    GIT_PS1_SHOWDIRTYSTATE=1
-    GIT_PS1_SHOWSTASHSTATE=1
-    GIT_PS1_SHOWUNTRACKEDFILES=1
-    GIT_PS1_SHOWCOLORHINTS=1
-    PS1+='$(__git_ps1)'
+# Git Bash(Git for Windows)
+if [[ $(uname) = *"MINGW64"* ]]; then
+    PS1='\[\033]0;$TITLEPREFIX:$PWD\007\]' # set window title
+    PS1="$PS1"'\[\033[33m\]' # change to brownish yellow
+    PS1="$PS1"'\w' # current working directory
+    PS1="$PS1"'\[\033[0m\]' # change color
+
+    if type __git_ps1 > /dev/null 2>&1; then
+        PS1="$PS1"'`__git_ps1`' # bash function
+    fi
+    PS1="$PS1"'\n$ ' # prompt: always $
+else
+    # base PS1
+    PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]'
+    # PS1='[$(date '+%H:%M:%S')] '$PS1
+
+    # Git PS1
+    if [[ -e /etc/bash_completion.d/git-prompt ]]; then
+        source /etc/bash_completion.d/git-prompt 
+        PS1+='$(__git_ps1)'
+    fi
+    # exit code
+    PS1+=' [$?]'
+    # new line
+    PS1+='\n\$ '
 fi
-# exit code
-PS1+=' [$?]'
-# new line
-PS1+='\n\$ '
-
 
 BATCAT_OPTION=' --theme base16'
 if type batcat > /dev/null 2>&1; then
@@ -65,6 +79,13 @@ fi
 
 if type colordiff > /dev/null 2>&1; then
     alias diff='colordiff'
+fi
+
+# fzf integration
+if type fzf > /dev/null; 2>&1; then
+    export FZF_DEFAULT_OPTS='--reverse --border'
+
+    eval "$(fzf --bash)"
 fi
 
 # change git repository with ghq and fzf
@@ -91,13 +112,6 @@ function gch () {
         git switch $selected_branch
     fi
 }
-
-# fzf integration
-if type fzf > /dev/null; 2>&1; then
-    FZF_DEFAULT_OPTS='--reverse --border'
-
-    eval "$(fzf --bash)"
-fi
 
 # go-task
 # see: https://taskfile.dev/docs/installation
