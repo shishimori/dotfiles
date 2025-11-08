@@ -82,7 +82,7 @@ if type colordiff > /dev/null 2>&1; then
 fi
 
 # fzf integration
-if type fzf > /dev/null; 2>&1; then
+if type fzf > /dev/null 2>&1; then
     export FZF_DEFAULT_OPTS='--reverse --border'
 
     eval "$(fzf --bash)"
