@@ -6,6 +6,7 @@ stty -ixon # disable lock by ^s
 PROMPT_DIRTRIM=2
 
 # for share history
+HISTCONTROL=ignoreboth
 export HISTFILE=~/.bash_history
 function _share_history {
     # append
