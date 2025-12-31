@@ -47,14 +47,17 @@ GIT_PS1_SHOWCOLORHINTS=1
 # Git Bash(Git for Windows)
 if [[ $(uname) = *"MINGW64"* ]]; then
     PS1=''
-    PS1="$PS1"'\[\033[33m\]' # change to brownish yellow
-    PS1="$PS1"'\w' # current working directory
-    PS1="$PS1"'\[\033[0m\]' # change color
+    PS1+='\[\033[33m\]' # change to brownish yellow
+    PS1+='\w' # current working directory
+    PS1+='\[\033[0m\]' # change color
 
     if type __git_ps1 > /dev/null 2>&1; then
-        PS1="$PS1"'`__git_ps1`' # bash function
+        PS1+='`__git_ps1`' # bash function
     fi
-    PS1="$PS1"'\n$ ' # prompt: always $
+    # exit code
+    PS1+=' [$?]'
+    # new line
+    PS1+='\n$ '
 else
     # base PS1
     PS1='\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]'
