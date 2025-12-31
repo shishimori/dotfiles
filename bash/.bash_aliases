@@ -62,7 +62,7 @@ else
 
     # Git PS1
     if [[ -e /etc/bash_completion.d/git-prompt ]]; then
-        source /etc/bash_completion.d/git-prompt 
+        source /etc/bash_completion.d/git-prompt
         PS1+='$(__git_ps1)'
     fi
     # exit code
