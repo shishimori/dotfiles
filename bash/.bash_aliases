@@ -36,7 +36,12 @@ alias dc='docker compose'
 alias d='docker'
 alias relogin="exec $SHELL"
 alias gtop='cd `git rev-parse --show-toplevel`'
-alias clip='xsel --input --clipboard'
+
+# WSL2でブラウザを開くための設定
+if [ -f '/mnt/c/Windows/System32/rundll32.exe' ]; then
+    export BROWSER='/mnt/c/Windows/System32/rundll32.exe url.dll,FileProtocolHandler'
+    alias open=$BROWSER
+fi
 
 # git-prompt settings
 GIT_PS1_SHOWDIRTYSTATE=1
@@ -83,6 +88,10 @@ fi
 
 if type colordiff > /dev/null 2>&1; then
     alias diff='colordiff'
+fi
+
+if type xsel > /dev/null 2>&1; then
+    alias clip='xsel --input --clipboard'
 fi
 
 # fzf settings
