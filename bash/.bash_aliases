@@ -94,6 +94,10 @@ if type xsel > /dev/null 2>&1; then
     alias clip='xsel --input --clipboard'
 fi
 
+if type lazygit > /dev/null 2>&1; then
+    alias lg='lazygit'
+fi
+
 # fzf settings
 export FZF_DEFAULT_OPTS='--reverse --border'
 
