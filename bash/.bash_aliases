@@ -118,9 +118,9 @@ function _fzf_cd_ghq () {
 }
 # call function via key binding and refresh prompt for bash
 # see: https://bbs.archlinux.org/viewtopic.php?pid=820707#p820707
-bind -x '"\204": _fzf_cd_ghq'
-bind '"\C-g":"\204\C-m"'
-bind '"\C-]":"\204\C-m"'
+bind -x '"\300": _fzf_cd_ghq'
+bind '"\C-g":"\300\C-m"'
+bind '"\C-]":"\300\C-m"'
 
 # git checkout by fzf
 # alias gch='git branch --sort=-authordate | sed -e "s/^[ *]*//" | fzf | xargs git switch'
