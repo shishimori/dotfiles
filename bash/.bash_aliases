@@ -104,6 +104,8 @@ export FZF_DEFAULT_OPTS='--reverse --border'
 # fzf integration
 if type fzf > /dev/null 2>&1; then
     eval "$(fzf --bash)"
+
+    alias fzfp="fzf --preview 'bat -n --color=always {}'"
 fi
 
 # change git repository with ghq and fzf
