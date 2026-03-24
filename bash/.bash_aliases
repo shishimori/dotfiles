@@ -145,7 +145,7 @@ function rmzone() {
 }
 
 # local aliases
-LOCAL_ALIASES=~/.bash_aliases_local.sh
+LOCAL_ALIASES=~/.bash_aliases.local.sh
 if [ -f "$LOCAL_ALIASES" ]; then
     source "$LOCAL_ALIASES"
 fi
