@@ -98,40 +98,51 @@ if type lazygit > /dev/null 2>&1; then
     alias lg='lazygit'
 fi
 
-# fzf settings
-export FZF_DEFAULT_OPTS='--reverse --border'
-
 # fzf integration
 if type fzf > /dev/null 2>&1; then
     eval "$(fzf --bash)"
 
-    alias fzfp="fzf --preview 'bat -n --color=always {}'"
-fi
+    export FZF_DEFAULT_OPTS='--reverse --border'
 
-# change git repository with ghq and fzf
-# ghq: https://github.com/x-motemen/ghq
-function _fzf_cd_ghq () {
-    # Git Bashの方向キーで中断される現象の対策として、リポジトリ一覧を変数に入れてからfzfを呼び出している
-    # see: https://github.com/junegunn/fzf/issues/3346#issuecomment-1914765828
-    local repo_list=$(ghq list -p)
+    export FZF_CTRL_T_OPTS="
+        --walker-skip .git,node_modules,target,vendor
+        --preview 'bat -n --color=always {}'
+        --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
-    local dir=$(echo "$repo_list" | fzf)
-    [ -n "${dir}" ] && cd "${dir}"
-}
-# call function via key binding and refresh prompt for bash
-# see: https://bbs.archlinux.org/viewtopic.php?pid=820707#p820707
-bind -x '"\300": _fzf_cd_ghq'
-bind '"\C-g":"\300\C-m"'
-bind '"\C-]":"\300\C-m"'
+    export FZF_ALT_C_OPTS="
+        --walker-skip .git,node_modules,target,vendor
+        --preview 'tree -C {}'"
 
-# git checkout by fzf
-# alias gch='git branch --sort=-authordate | sed -e "s/^[ *]*//" | fzf | xargs git switch'
-function gch () {
-    selected_branch=$(git branch --sort=-authordate | sed -e "s/^[ *]*//" | fzf)
-    if [ "$selected_branch" ]; then
-        git switch $selected_branch
+    # change git repository with ghq and fzf
+    # ghq: https://github.com/x-motemen/ghq
+    if type ghq > /dev/null 2>&1; then
+        function _fzf_cd_ghq () {
+            # Git Bashの方向キーで中断される現象の対策として、リポジトリ一覧を変数に入れてからfzfを呼び出している
+            # see: https://github.com/junegunn/fzf/issues/3346#issuecomment-1914765828
+            local repo_list=$(ghq list -p)
+
+            local dir=$(
+                echo "$repo_list" | 
+                fzf \
+                    --preview 'tree -C {}' \
+                    --preview-window down \
+                    --bind 'ctrl-/:change-preview-window(hidden|)'
+            )
+            [ -n "${dir}" ] && cd "${dir}"
+        }
+        # call function via key binding and refresh prompt for bash
+        # see: https://bbs.archlinux.org/viewtopic.php?pid=820707#p820707
+        bind -x '"\300": _fzf_cd_ghq'
+        bind '"\C-g":"\300\C-m"'
+        bind '"\C-]":"\300\C-m"'
     fi
-}
+
+    # git checkout by fzf
+    function gch () {
+        local selected_branch=$(git branch --sort=-authordate | sed -e "s/^[ *]*//" | fzf)
+        [ "$selected_branch" ] && git switch $selected_branch
+    }
+fi
 
 # go-task
 # see: https://taskfile.dev/docs/installation
