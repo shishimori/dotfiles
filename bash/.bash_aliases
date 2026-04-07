@@ -98,6 +98,10 @@ if type lazygit > /dev/null 2>&1; then
     alias lg='lazygit'
 fi
 
+if ! type fzf > /dev/null 2>&1 && [ -x "$HOME/.fzf/bin/fzf" ]; then
+    PATH="$HOME/.fzf/bin:$PATH"
+fi
+
 # fzf integration
 if type fzf > /dev/null 2>&1; then
     eval "$(fzf --bash)"
@@ -122,7 +126,7 @@ if type fzf > /dev/null 2>&1; then
             local repo_list=$(ghq list -p)
 
             local dir=$(
-                echo "$repo_list" | 
+                printf '%s\n' "$repo_list" |
                 fzf \
                     --preview 'tree -C {}' \
                     --preview-window down \
@@ -130,11 +134,11 @@ if type fzf > /dev/null 2>&1; then
             )
             [ -n "${dir}" ] && cd "${dir}"
         }
-        # call function via key binding and refresh prompt for bash
-        # see: https://bbs.archlinux.org/viewtopic.php?pid=820707#p820707
-        bind -x '"\300": _fzf_cd_ghq'
-        bind '"\C-g":"\300\C-m"'
-        bind '"\C-]":"\300\C-m"'
+
+        bind -r "\C-g" 2> /dev/null
+        bind -r "\C-]" 2> /dev/null
+        bind -x '"\C-g": _fzf_cd_ghq'
+        bind -x '"\C-]": _fzf_cd_ghq'
     fi
 
     # git checkout by fzf
