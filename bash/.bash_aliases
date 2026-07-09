@@ -144,7 +144,14 @@ if type fzf > /dev/null 2>&1; then
 
     # git checkout by fzf
     function gch () {
-        local selected_branch=$(git branch --sort=-authordate | sed -e "s/^[ *]*//" | fzf)
+        local sort='-authordate'
+        case "$1" in
+            name) sort='refname' ;;
+            -name) sort='-refname' ;;
+            date) sort='authordate' ;;
+            -date) sort='-authordate' ;;
+        esac
+        local selected_branch=$(git branch --sort=$sort | sed -e "s/^[ *]*//" | fzf)
         [ "$selected_branch" ] && git switch $selected_branch
     }
 fi
