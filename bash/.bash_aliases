@@ -160,6 +160,12 @@ function rmzone() {
     sudo find ./ -type f -name '*:Zone.Identifier' -exec rm {} \;
 }
 
+if type wslpath > /dev/null 2>&1; then
+    function cdw() {
+        cd "$(wslpath -u "$1")"
+    }
+fi
+
 # local aliases
 LOCAL_ALIASES=~/.bash_aliases.local.sh
 if [ -f "$LOCAL_ALIASES" ]; then
