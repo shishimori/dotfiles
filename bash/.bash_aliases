@@ -39,8 +39,22 @@ alias gtop='cd `git rev-parse --show-toplevel`'
 
 # WSL2でブラウザを開くための設定
 if [ -f '/mnt/c/Windows/System32/rundll32.exe' ]; then
-    export BROWSER='/mnt/c/Windows/System32/rundll32.exe url.dll,FileProtocolHandler'
-    alias open=$BROWSER
+    function open() {
+        local target="$1"
+        case "$target" in
+            file://*)
+                # file:// を外して Linux パスに戻し、Windows パスへ変換
+                target="$(wslpath -w "${target#file://}")"
+                ;;
+            *://*)
+                # http(s):// など他のスキームはそのまま渡す
+                ;;
+            *)
+                target="$(wslpath -w "$target")"
+                ;;
+        esac
+        /mnt/c/Windows/System32/rundll32.exe url.dll,FileProtocolHandler "$target"
+    }
 fi
 
 # git-prompt settings
