@@ -2,6 +2,7 @@
 
 LINK_FILES=(
     ./bash/.bash_aliases
+    ./vim/.vimrc
 )
 
 for f in "${LINK_FILES[@]}"
