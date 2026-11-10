@@ -15,6 +15,8 @@ set cursorline
 set incsearch
 set hlsearch
 set ignorecase
+nmap <Esc><Esc> :nohlsearch<CR><Esc>
+set showmatch
 
 set splitright
 
